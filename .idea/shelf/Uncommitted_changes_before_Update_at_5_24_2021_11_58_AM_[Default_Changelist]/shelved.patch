@@ -1,0 +1,382 @@
+Index: src/main/webapp/WEB-INF/jsp/report/payrollSummaryByClientForm2.jsp
+===================================================================
+--- src/main/webapp/WEB-INF/jsp/report/payrollSummaryByClientForm2.jsp	(revision f8333ce0018b292a1e5ea891935c08e77860a8e7)
++++ src/main/webapp/WEB-INF/jsp/report/payrollSummaryByClientForm2.jsp	(revision f8333ce0018b292a1e5ea891935c08e77860a8e7)
+@@ -1,201 +0,0 @@
+-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+-<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+-<html>
+-
+-<head>
+-<title>Payroll Breakdown by <c:choose><c:when test="${roleBean.staffTypeName == 'Pensioner'}">TCOs</c:when> <c:otherwise> <c:out value="${roleBean.mdaTitle}" />s </c:otherwise></c:choose></title>
+-<link rel="stylesheet" href="styles/omg.css" type="text/css" />
+-<link rel="stylesheet" href="styles/skye.css" type="text/css" media="screen">
+-<link rel="stylesheet" href="<c:url value="styles/epayroll.css"/>" type="text/css"/>
+-
+-</head>
+-
+-<body class="main">
+-    <script type="text/JavaScript" src="scripts/jacs.js"></script>
+-<script type="text/javascript" src="scripts/helper.js"></script>
+-<form:form modelAttribute="miniBean">
+-<table class="main" width="70%" border="1" bordercolor="#33c0c8" cellspacing="0" cellpadding="0" align="center">
+-	<%@ include file="/WEB-INF/jsp/headerFile.jsp" %>
+-	<tr>
+-		<td>
+-		<table width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+-
+-			<tr>
+-				<td colspan="2">
+-				<div class="title">
+-					Ogun State Government - <br>
+-					Payroll Summary by Organization</div>
+-				</td>
+-			</tr>
+-			<tr>
+-				<td valign="top" class="mainBody" id="mainBody">
+-
+-				<span class="reportTopPrintLink">
+-				<a href="${appContext}/payrollSummaryByMDAPExcel.do?rm=1">
+-				View in Excel </a><br />
+-				</span>
+-				<div class="reportDescText">
+-					This report breaks down the Payroll per Organization
+-					<br />
+-				</div>
+-				<table class="reportMain" cellpadding="0" cellspacing="0" width="60%">
+-
+-					 <tr>
+-                                                             <td class="reportFormControls">
+-                                                                         <span class="optional"> Start Date </span> <form:input path="fromDate" readonly="readonly"/>
+-                     													<img src="images/calendar.png" id="fromDateId" width="16" height="16" border="0" alt="Pick a date" onclick="JACS.show(document.getElementById('fromDate'),event);"><span class="optional">&nbsp;End Date </span> <form:input path="toDate" readonly="readonly"/>
+-                     													<img src="images/calendar.png" id="toDateId" width="16" height="16" border="0" alt="Pick a date" onclick="JACS.show(document.getElementById('toDate'),event);">&nbsp;&nbsp;
+-                                                             </td>
+-                     </tr>
+-
+-					<tr>
+-                     <td class="buttonRow" align="right">
+-                       <input type="image" name="_updateReport" value="updateReport" alt="Update Report" class="updateReportSubmit" src="images/Update_Report_h.png">
+-                     </td>
+-                   </tr>
+-					<tr>
+-
+-						<td class="reportFormControlsSpacing"></td>
+-					</tr>
+-
+-					</table>
+-					<table>
+-
+-					<tr>
+-						<td>
+-						<h3>Ogun State Executive Staff Salary Report for <c:out value="${miniBean.fromDateStr}"/> - <c:out value="${miniBean.toDateStr}"/></h3>
+-						<br />
+-						<div style="overflow-x:auto;">
+-						<table class="report" cellspacing="0" cellpadding="0">
+-						<c:forEach var="mStatus" items="${miniBean.beanList}" begin="0" end="0">
+-							<tr class="reportOdd header">
+-								<td class="tableCell" align="center" valign="top">
+-								S/No.</td>
+-								<c:forEach items="${mStatus.wageSummaryBeanList}" var="wBean">
+-								<td class="tableCell" align="center" valign="top">
+-								<c:out value="${wBean.assignedToObject}"/> Staff Strength</td>
+-								</c:forEach>
+-								<c:forEach items="${mStatus.wageSummaryBeanList}" var="wBean">
+-                                <td class="tableCell" align="center" valign="top">
+-                                <c:out value="${wBean.assignedToObject}"/></td>
+-                                </c:forEach>
+-								<c:forEach items="${mStatus.contributionList}" var="wCBean">
+-								<td class="tableCell" align="center" valign="top">
+-                                <c:out value="${wCBean.name}"/>
+-								</td>
+-								</c:forEach>
+-									<td class="tableCell" align="center" valign="top">
+-									Total Contributions
+-									</td>
+-								<c:forEach items="${mStatus.subventionList}" var="wSBean">
+-								<td class="tableCell" align="center" valign="top">
+-								<c:out value="${wSBean.name}"/>
+-								</td>
+-								</c:forEach>
+-								<td class="tableCell" align="center" valign="top">
+-									Total Subvention
+-								</td>
+-								<td class="tableCell" align="center" valign="top">
+-                                	Total Payments
+-                                </td>
+-                                <c:forEach items="${mStatus.deductionList}" var="dList">
+-                                <td class="tableCell" align="center" valign="top">
+-                                <c:out value="${dList.name}"/>
+-                                </td>
+-                                </c:forEach>
+-                                <td class="tableCell" align="center" valign="top">
+-                                 Total Deductions
+-                                </td>
+-                                <td class="tableCell" align="center" valign="top">
+-                                 Net Pay (Gross Pay - Total Deductions)
+-                                </td>
+-							</tr>
+-							</c:forEach>
+-
+-                            <c:forEach var="mStatus" items="${miniBean.beanList}" varStatus="gridRow">
+-							<tr class="${wBean.displayStyle}">
+-								<td class="tableCell" valign="top"><c:out value="${mStatus.monthAndYearStr}"/></td>
+-							<c:forEach items="${mStatus.wageSummaryBeanList}" var="wBean">
+-								<td class="tableCell" align="right" valign="top"><c:out value="${wBean.noOfEmp}"/></td>
+-							</c:forEach>
+-							<c:forEach items="${mStatus.wageSummaryBeanList}" var="wBean">
+-								<td class="tableCell" align="right" valign="top"><c:out value="${wBean.currentBalanceStr}"/></td>
+-							</c:forEach>
+-							<c:forEach items="${mStatus.contributionList}" var="wCBean">
+-                            <td class="tableCell" align="right" valign="top">
+-                             <c:out value="${wCBean.currentBalanceStr}"/>
+-                            </td>
+-                            </c:forEach>
+-                            <td class="tableCell" align="right" valign="top">
+-                             <c:out value="${mStatus.totalCurrContStr}"/>
+-                             </td>
+-                             <c:forEach items="${mStatus.subventionList}" var="wSBean">
+-                             <td class="tableCell" align="right" valign="top">
+-                             <c:out value="${wSBean.currentBalanceStr}"/>
+-                             </td>
+-                             </c:forEach>
+-							 <td class="tableCell" align="right" valign="top">
+-                              <c:out value="${mStatus.totalSubBalStr}"/>
+-                             </td>
+-                             <td class="tableCell" align="right" valign="top">
+-                             <c:out value="${mStatus.totalCurrOutGoingStr}"/>
+-                             </td>
+-                             <c:forEach items="${mStatus.deductionList}" var="dList">
+-                              <td class="tableCell" align="right" valign="top">
+-                              <c:out value="${dList.currentBalanceStr}"/>
+-                              </td>
+-                             </c:forEach>
+-                             <td class="tableCell" align="right" valign="top">
+-                              <c:out value="${mStatus.totalDedBalStr}"/>
+-                              </td>
+-                              <td class="tableCell" align="right" valign="top">
+-                              <c:out value="${mStatus.grandTotalStr}"/>
+-                              </td>
+-							</tr>
+-							</c:forEach>
+-
+-						</table>
+-						</div>
+-						<br>
+-						</td>
+-
+-					</tr>
+-
+-
+-                  </table>
+-
+-                   <table>
+-				<tr>
+-				<td class="activeTD"><form:radiobutton path="reportType" value="1"  onclick="if (this.checked) { document.getElementById('excelReportLink').style.display = 'none';document.getElementById('pdfReportLink').style.display = '';}"/>PDF Report Links <form:radiobutton path="reportType" value="2" onclick="if (this.checked) { document.getElementById('excelReportLink').style.display = '';document.getElementById('pdfReportLink').style.display = 'none';}"/> Excel Report Links</td>
+-				</tr>
+-				</table>
+-
+-				<div id=excelReportLink class="reportBottomPrintLink" style='display:none'>
+-				<a href="${appContext}/payrollSummaryByMDAPExcel.do?rm=&ry=&rt=1">
+-				View in Excel </a><br />
+-				</div>
+-
+-				<div id=pdfReportLink class="reportBottomPrintLink" style='display:none'>
+-				 	<a href="${appContext}/payrollSummaryByMDAPExcel.do?rm=&ry=&rt=2">
+-				View in Pdf </a>
+-				<br />
+-				</div>
+-
+-				</td>
+-				<td valign="top" class="navSide"><br>
+-				<br>
+-
+-				</td>
+-				</tr>
+-				</table>
+-				</td>
+-
+-			</tr>
+-			<tr> <%@ include file="/WEB-INF/jsp/footerFile.jsp" %></tr>
+-			</table>
+-			</form:form>
+-		</body>
+-
+-	</html>
+-
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=ogsg-ippms\r\nserver.port=8098\r\nspring.mvc.view.prefix=/WEB-INF/jsp/\r\nspring.mvc.view.suffix=.jsp\r\n\r\nserver.servlet.context-path=/ogsg_ippms\r\n\r\n#Hibernate Properties\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.hibernate.ddl-auto=create\r\nspring.jpa.properties.hibernate.default_schema=gov_ippms_ogs\r\n\r\n\r\n# Database\r\ndb.driver=org.postgresql.Driver\r\ndb.url=jdbc:postgresql://localhost:5432/postgres?currentSchema=gov_ippms_ogs\r\ndb.username=postgres\r\ndb.password=unix11\r\n\r\n\r\n# Hibernate\r\nhibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nhibernate.show_sql=true\r\nhibernate.hbm2ddl.auto=update\r\n hibernate.jdbc.batch_size=50\r\nhibernate.jdbc.fetch_size=500\r\n cache.provider_class=org.hibernate.cache.NoCacheProvider\r\ncache.use_query_cache=false\r\nmax_fetch_depth=3\r\ncache.use_minimal_puts=false\r\n# for handling large objects i.e clobs and blobs -->\r\nhibernate.jdbc.use_streams_for_binary=true\r\nentitymanager.packagesToScan=com.osm.gnl.ippms.ogsg\r\nspring.jpa.properties.hibernate.enable_lazy_load_no_trans=true\r\nspring.jpa.properties.hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext\r\nspring.jpa.properties.hibernate.jdbc.batch_size=50\r\n\r\nmaxUploadValue=1048576\r\n\r\nippms.excluded.urls=messaging.do,finalizeCustomReport.do,globalError.do,signOut.do,accessDenied.do,loginForm,index.jsp,securedLoginForm,securedLogoutForm,determineDashBoard.do,exceptionReporter.do,actSuccessForm.do,changePassword.do,viewMultiEmployeeResults.do,uploadSubmit.do,fileUploadReport.do,fileUploadFailed.do,fixFileUploadError.do,fileUploadSaveStatus.do,uploadStatus.do,downloadObjectTemplate.do,downloadTypeTemplate.do,displayMassEntryResult.do,permissionDenied.do\r\nserver.servlet.session.persistent=false\r\n\r\n#Multipart\r\nspring.servlet.multipart.enabled=true\r\nspring.http.multipart.max-file-size=1MB\r\nspring.http.multipart.max-request-size=1MB\r\nspring.servlet.multipart.resolve-lazily=true\r\nspring.servlet.multipart.file-size-threshold=1MB\r\n\r\n#Biometric Verification URL\r\nAPI_IP = http://80.248.8.246/\r\nAPI_PASSWORD = Precious1.\r\nAPI_USERNAME = payrollsystem@iqss.pro\r\nAPI_FIRST_NAME =\r\nAPI_LAST_NAME =\r\n\r\n#Mail Config\r\nspring.mail.host=smtp.gmail.com\r\nspring.mail.port=587\r\nspring.mail.username=ogsgippmssalnotif@gmail.com\r\nspring.mail.password=salarynotif777\r\n#SMTP Properties\r\nspring.mail.properties.mail.smtp.auth=true\r\nspring.mail.properties.mail.smtp.connectiontimeout=5000\r\nspring.mail.properties.mail.smtp.timeout=5000\r\n#TLS Port 587\r\nspring.mail.properties.mail.smtp.starttls.enable=true
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+--- src/main/resources/application.properties	(revision f8333ce0018b292a1e5ea891935c08e77860a8e7)
++++ src/main/resources/application.properties	(date 1621848068633)
+@@ -13,7 +13,7 @@
+ 
+ # Database
+ db.driver=org.postgresql.Driver
+-db.url=jdbc:postgresql://localhost:5432/postgres?currentSchema=gov_ippms_ogs
++db.url=jdbc:postgresql://localhost:5432/db_new_postgres?currentSchema=gov_ippms_ogs
+ db.username=postgres
+ db.password=unix11
+ 
+@@ -37,7 +37,7 @@
+ 
+ maxUploadValue=1048576
+ 
+-ippms.excluded.urls=messaging.do,finalizeCustomReport.do,globalError.do,signOut.do,accessDenied.do,loginForm,index.jsp,securedLoginForm,securedLogoutForm,determineDashBoard.do,exceptionReporter.do,actSuccessForm.do,changePassword.do,viewMultiEmployeeResults.do,uploadSubmit.do,fileUploadReport.do,fileUploadFailed.do,fixFileUploadError.do,fileUploadSaveStatus.do,uploadStatus.do,downloadObjectTemplate.do,downloadTypeTemplate.do,displayMassEntryResult.do,permissionDenied.do
++ippms.excluded.urls=finalizeCustomReport.do,globalError.do,signOut.do,accessDenied.do,loginForm,index.jsp,securedLoginForm,securedLogoutForm,determineDashBoard.do,exceptionReporter.do,actSuccessForm.do,changePassword.do,viewMultiEmployeeResults.do,uploadSubmit.do,fileUploadReport.do,fileUploadFailed.do,fixFileUploadError.do,fileUploadSaveStatus.do,uploadStatus.do,downloadObjectTemplate.do,downloadTypeTemplate.do,displayMassEntryResult.do,permissionDenied.do
+ server.servlet.session.persistent=false
+ 
+ #Multipart
+@@ -54,14 +54,9 @@
+ API_FIRST_NAME =
+ API_LAST_NAME =
+ 
+-#Mail Config
+-spring.mail.host=smtp.gmail.com
+-spring.mail.port=587
+-spring.mail.username=ogsgippmssalnotif@gmail.com
+-spring.mail.password=salarynotif777
+-#SMTP Properties
+-spring.mail.properties.mail.smtp.auth=true
+-spring.mail.properties.mail.smtp.connectiontimeout=5000
+-spring.mail.properties.mail.smtp.timeout=5000
+-#TLS Port 587
+-spring.mail.properties.mail.smtp.starttls.enable=true
+\ No newline at end of file
++
++#mail server credentials
++spring.mail.host=admin@gmail.com
++spring.mail.port=25
++spring.mail.userName=USER_NAME
++spring.mail.password=THE_PASSWORD
+\ No newline at end of file
+Index: src/main/java/com/osm/gnl/ippms/ogsg/controllers/report/FlaggedPromotionsFormController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.osm.gnl.ippms.ogsg.controllers.report;\r\n\r\nimport com.osm.gnl.ippms.ogsg.abstractentities.predicate.CustomPredicate;\r\nimport com.osm.gnl.ippms.ogsg.auth.domain.SessionManagerService;\r\nimport com.osm.gnl.ippms.ogsg.base.services.EmployeeService;\r\nimport com.osm.gnl.ippms.ogsg.base.services.PromotionService;\r\nimport com.osm.gnl.ippms.ogsg.controllers.BaseController;\r\nimport com.osm.gnl.ippms.ogsg.domain.report.VariationReportBean;\r\nimport com.osm.gnl.ippms.ogsg.domain.simulation.SimulationInfoContainer;\r\nimport com.osm.gnl.ippms.ogsg.domain.simulation.SimulationInfoSummaryBean;\r\nimport com.osm.gnl.ippms.ogsg.domain.simulation.SimulationMiniBean;\r\nimport com.osm.gnl.ippms.ogsg.generic.domain.BusinessCertificate;\r\nimport com.osm.gnl.ippms.ogsg.payroll.domain.PayrollFlag;\r\nimport com.osm.gnl.ippms.ogsg.payroll.domain.PayrollRunMasterBean;\r\nimport com.osm.gnl.ippms.ogsg.payroll.utils.PayrollBeanUtils;\r\nimport com.osm.gnl.ippms.ogsg.report.beans.WageBeanContainer;\r\nimport com.osm.gnl.ippms.ogsg.report.beans.WageSummaryBean;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.validation.BindingResult;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport org.springframework.web.bind.support.SessionStatus;\r\n\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport java.time.LocalDate;\r\nimport java.util.*;\r\n\r\n@Controller\r\n@RequestMapping({\"/flaggedPromotions.do\"})\r\n@SessionAttributes(types={WageBeanContainer.class})\r\npublic class FlaggedPromotionsFormController extends BaseController {\r\n\r\n    @Autowired\r\n    private PromotionService promotionService;\r\n\r\n    @Autowired\r\n    private EmployeeService employeeService;\r\n\r\n\r\n    private HashMap<Long, HashMap<Integer, WageSummaryBean>> mdaMap;\r\n\r\n    private List<WageSummaryBean> annualSalaryTotalList;\r\n\r\n    private List<WageSummaryBean> subventionsTotalList;\r\n\r\n    private List<WageSummaryBean> contributionsTotalList;\r\n\r\n    private List<WageSummaryBean> totalsMap;\r\n\r\n    private List<WageSummaryBean> grandTotalsMap;\r\n\r\n    private List<WageSummaryBean> headerMap;\r\n    private HashMap<Integer,WageSummaryBean> annualSalaryMap;\r\n    private HashMap<Integer,WageSummaryBean> consolidatedAllowanceMap;\r\n    private HashMap<Integer,WageSummaryBean> monthlyGrossMap;\r\n\r\n\r\n\r\n\r\n    private String lastDisplayStyle;\r\n    private int fStartMonth;\r\n\r\n    private int totalNumOfMdas;\r\n\r\n    private  int totalNumOfCont;\r\n\r\n    private static final String VIEW_NAME = \"promotion/flaggedPromotionsForm\";\r\n\r\n    private void init(){\r\n\r\n        this.annualSalaryTotalList = new ArrayList<WageSummaryBean>();\r\n\r\n        this.contributionsTotalList = new ArrayList<WageSummaryBean>();\r\n\r\n        this.grandTotalsMap = new ArrayList<WageSummaryBean>();\r\n\r\n        this.mdaMap = new HashMap<Long,HashMap<Integer,WageSummaryBean>>();\r\n\r\n        this.headerMap = new ArrayList<WageSummaryBean>();\r\n\r\n\r\n        this.totalsMap = new ArrayList<WageSummaryBean>();\r\n\r\n        this.annualSalaryMap = new HashMap<Integer,WageSummaryBean>();\r\n        this.consolidatedAllowanceMap = new HashMap<Integer,WageSummaryBean>();\r\n        this.monthlyGrossMap = new HashMap<Integer,WageSummaryBean>();\r\n\r\n        totalNumOfMdas = 0;\r\n\r\n        totalNumOfCont = 0;\r\n    }\r\n\r\n\r\n    @RequestMapping(method={RequestMethod.GET})\r\n    public String setupForm(Model model, HttpServletRequest request)\r\n            throws Exception {\r\n        SessionManagerService.manageSession(request, model);\r\n\r\n        init();\r\n\r\n        BusinessCertificate bc = this.getBusinessCertificate(request);\r\n\r\n        List<PayrollFlag> pfList =  this.genericService.loadAllObjectsWithoutRestrictions(PayrollFlag.class, \"payPeriodStart\");\r\n        Comparator<PayrollFlag> comparator = Comparator.comparing(PayrollFlag::getId);\r\n\r\n        Collections.sort(pfList, comparator.reversed());\r\n\r\n        PayrollFlag pf = pfList.get(1);\r\n\r\n        LocalDate endDate = null;\r\n        LocalDate startDate = null;\r\n\r\n        if (!pf.isNewEntity()) {\r\n\r\n            endDate = pf.getPayPeriodEnd();\r\n            startDate = pf.getPayPeriodStart();\r\n        } else {\r\n            ArrayList<LocalDate> list = PayrollBeanUtils.getDefaultCheckRegisterDates();\r\n\r\n            endDate = list.get(1);\r\n            startDate = list.get(0);\r\n        }\r\n\r\n        ArrayList<String> wGuideInfo = new ArrayList<String>();\r\n        //First determine from when to when to load.....\r\n        //Single Year...\r\n\r\n        int wEndMonth = (endDate.getMonthValue());\r\n        wGuideInfo.add(wEndMonth + \":\" + endDate.getYear());\r\n\r\n        String fDate = PayrollBeanUtils.getJavaDateAsString(startDate);\r\n        String tDate = PayrollBeanUtils.getJavaDateAsString(endDate);\r\n\r\n        return doWork(wGuideInfo, bc, model, request,  fDate, tDate);\r\n    }\r\n\r\n\r\n    @RequestMapping(method={RequestMethod.GET}, params={\"fd\", \"td\"})\r\n    public String setupForm(@RequestParam(\"fd\") String fromDate, @RequestParam(\"td\") String toDate, Model model, HttpServletRequest request) throws Exception {\r\n        SessionManagerService.manageSession(request, model);\r\n\r\n        init();\r\n\r\n        BusinessCertificate bc = this.getBusinessCertificate(request);\r\n\r\n        LocalDate date1 = PayrollBeanUtils.setDateFromString(fromDate);\r\n\r\n        LocalDate date2 = PayrollBeanUtils.setDateFromString(toDate);\r\n\r\n        int pStartDate = date1.getMonthValue();\r\n        int pRunYear = date1.getYear();\r\n        int pEndMonth = date2.getMonthValue();\r\n\r\n        ArrayList<String> wGuideInfo = new ArrayList<String>();\r\n\r\n        for (int wStart = pStartDate; wStart <= pEndMonth; wStart++) {\r\n            wGuideInfo.add(wStart + \":\" +pRunYear);\r\n        }\r\n\r\n        return doWork(wGuideInfo, bc, model, request, fromDate, toDate);\r\n    }\r\n\r\n    public String doWork(ArrayList<String> wGuideInfo, BusinessCertificate bc, Model model, HttpServletRequest request,\r\n                         String fDate, String tDate) throws IllegalAccessException, InstantiationException {\r\n\r\n        WageBeanContainer wSIC = new WageBeanContainer();\r\n\r\n        Long pPid = 0L;\r\n        pPid++;\r\n        wSIC.setId(pPid);\r\n        //Now iterate through our friends and make a container object.\r\n        //Create the Header Beans...\r\n        int wIndex = 1;\r\n\r\n        for(String s : wGuideInfo){\r\n            int wStartMonth = Integer.parseInt(s.substring(0,s.indexOf(\":\")));\r\n            int wStartYear = Integer.parseInt(s.substring(s.indexOf(\":\")+ 1));\r\n\r\n            WageSummaryBean hb = new WageSummaryBean();\r\n\r\n\r\n            //Now load ALL SimulationInfo for this period...\r\n            List<VariationReportBean> wList = this.promotionService.loadFlaggedPromotionsForAllOrganization(wStartMonth, wStartYear);\r\n\r\n\r\n            createSimulationInfoSummaryBean(wList,wStartMonth,wStartYear,wIndex);\r\n\r\n            hb.setIntegerId(new Integer(wIndex));\r\n            hb.setName(PayrollBeanUtils.getMonthNameAndYearFromCalendarMonth(wStartMonth, wStartYear));\r\n            this.headerMap.add(hb);\r\n            wIndex++;\r\n        }\r\n\r\n\r\n        //Now lets create the display beans....\r\n        Collections.sort(headerMap);\r\n        wSIC.setHeaderList(headerMap);\r\n\r\n        //Now create mdapBeanList...\r\n        List<WageSummaryBean> wRetList = new ArrayList<WageSummaryBean>();\r\n        wRetList = getSimulationMiniBeanFromMap(this.mdaMap,wRetList,true);\r\n\r\n        List<WageSummaryBean> cRetList = new ArrayList<WageSummaryBean>();\r\n        List<WageSummaryBean> cPayeeList = new ArrayList<WageSummaryBean>();\r\n        cRetList = getSimulationMiniBeanFromMap(this.mdaMap,cRetList,true);\r\n\r\n        //Now before we sort make SimulationInfoSummaryBean....\r\n        List<WageSummaryBean> wMasterList = this.makeSimulationInfoSummaryBeanList(wRetList);\r\n\r\n\t\t/*for(SimulationInfoSummaryBean s : wMasterList){\r\n\t\t\tSystem.out.println(s.getAssignedToObject());\r\n\t\t\tfor(SimulationMiniBean sb : s.getMiniBeanList()){\r\n\t\t\t\tSystem.out.println(\"ID = \"+sb.getId()+\": Parent Key = \"+sb.getParentKey()+\": Name = \"+sb.getName()+\": Value = \"+sb.getCurrentValueStr());\r\n\t\t\t}\r\n\t\t}*/\r\n\r\n        Collections.sort(wMasterList);\r\n\r\n        wSIC.setSummaryBean(wMasterList);\r\n\r\n        Collections.sort(wRetList);\r\n\r\n        wSIC.setMdapList(wRetList);\r\n\r\n        Collections.sort(this.totalsMap);\r\n\r\n        wSIC.setMdapFooterList(this.totalsMap);\r\n\r\n        //Now Set Deductions....\r\n        wRetList = null;\r\n\r\n\r\n        Collections.sort(this.grandTotalsMap);\r\n        wSIC.setFromDateStr(fDate);\r\n        wSIC.setToDateStr(tDate);\r\n\r\n        model.addAttribute(\"miniBean\", wSIC);\r\n        addRoleBeanToModel(model, request);\r\n\r\n\r\n        return VIEW_NAME;\r\n    }\r\n\r\n\r\n\r\n\r\n    //Now herein lies all the work..\r\n    private List<WageSummaryBean> makeSimulationInfoSummaryBeanList(\r\n            List<WageSummaryBean> pRetList)\r\n    {\r\n        List<WageSummaryBean> wRetList = new ArrayList<WageSummaryBean>();\r\n        if(pRetList == null || pRetList.isEmpty())\r\n            return wRetList;\r\n        HashMap<Integer,WageSummaryBean> wWorkMap = new HashMap<Integer,WageSummaryBean>();\r\n\r\n        for(WageSummaryBean child : pRetList){\r\n\r\n            Integer wKey = child.getParentKey().intValue();\r\n            //System.out.println(\"child.getParentKey() = \"+wKey);\r\n            WageSummaryBean parent = wWorkMap.get(wKey);\r\n            if(null == parent){\r\n                parent = new WageSummaryBean();\r\n                parent.setAssignedToObject(child.getName());\r\n                parent.setId(child.getParentKey());\r\n                List<WageSummaryBean> wChildList = new ArrayList<WageSummaryBean>();\r\n                wChildList.add(child);\r\n                Collections.sort(wChildList);\r\n                parent.setMiniBeanList(wChildList);\r\n            }else{\r\n                List<WageSummaryBean> wChildList = parent.getMiniBeanList();\r\n                wChildList.add(child);\r\n                Collections.sort(wChildList);\r\n                parent.setAssignedToObject(child.getName());\r\n                parent.setId(child.getParentKey());\r\n                parent.setMiniBeanList(wChildList);\r\n            }\r\n            wWorkMap.put(wKey, parent);\r\n\r\n        }\r\n        //Make Entry.Set list outa HashMap...\r\n        wRetList = this.getEntryMapList(wWorkMap);\r\n\r\n        return wRetList;\r\n    }\r\n\r\n    private List<WageSummaryBean> getEntryMapList(\r\n            HashMap<Integer, WageSummaryBean> pWorkMap)\r\n    {\r\n        List<WageSummaryBean> wRetList = new ArrayList<WageSummaryBean>();\r\n        if(pWorkMap == null || pWorkMap.isEmpty())\r\n            return wRetList;\r\n\r\n        Set<Map.Entry<Integer,WageSummaryBean>> set = pWorkMap.entrySet();\r\n        Iterator<Map.Entry<Integer, WageSummaryBean>> i = set.iterator();\r\n\r\n        while(i.hasNext()){\r\n            Map.Entry<Integer,WageSummaryBean> me = i.next();\r\n            me.getValue().setDisplayStyle(\"reportOdd\");\r\n            wRetList.add(me.getValue());\r\n        }\r\n\r\n        return wRetList;\r\n    }\r\n\r\n\r\n    private void createSimulationInfoSummaryBean(\r\n            List<VariationReportBean> pList, int pStartMonth, int pStartYear, int pIndex) throws InstantiationException, IllegalAccessException {\r\n\r\n\r\n        WageSummaryBean wTotals = new WageSummaryBean();\r\n        wTotals.setIntegerId(pIndex);\r\n\r\n\r\n        double wTotalPay = 0.0D;\r\n        Long i = 1L;\r\n        for(VariationReportBean e : pList){\r\n\r\n            Long wKey = e.getBusinessClientInstId();\r\n\r\n\r\n\r\n            WageSummaryBean wWSB =  new WageSummaryBean();\r\n            //SimulationInfoSummaryBean wSISB = new SimulationInfoSummaryBean();\r\n\r\n            //int _wKey = this.mapAgencyMap.get(wKey);\r\n            if(this.mdaMap.containsKey(wKey)){\r\n                HashMap<Integer,WageSummaryBean> wAll = this.mdaMap.get(wKey);\r\n                //Now get the SimulationInfoSummary for the Year/Month Simulation....\r\n                if(wAll == null)\r\n                    wAll = new HashMap<Integer,WageSummaryBean>();\r\n\r\n                if(wAll.containsKey(pIndex)){\r\n                    wWSB = wAll.get(pIndex);\r\n                    wWSB.setCountValue(wWSB.getCountValue() + i);\r\n                    wWSB.setParentKey(wKey);\r\n                    wAll.put(pIndex, wWSB);\r\n\r\n                }else{\r\n\r\n                    wWSB.setName(e.getBusinessName());\r\n                    wWSB.setIntegerId(pIndex);\r\n                    wWSB.setCountValue(i);\r\n                    wWSB.setParentKey(wKey);\r\n                    wAll.put(pIndex, wWSB);\r\n\r\n                }\r\n                this.mdaMap.put(wKey, wAll);\r\n\r\n\r\n            }else{\r\n                HashMap<Integer,WageSummaryBean> wAll = new HashMap<Integer,WageSummaryBean>();\r\n\r\n                wWSB.setName(e.getBusinessName());\r\n                wWSB.setParentKey(wKey);\r\n                wWSB.setCountValue(i);\r\n                wWSB.setIntegerId(pIndex);\r\n                wAll.put(pIndex, wWSB);\r\n                this.mdaMap.put(wKey, wAll);\r\n            }\r\n\r\n            //Now do totals for each Year:Month Combo..\r\n            wTotals.setCountValue(wWSB.getCountValue());\r\n     }\r\n\r\n\r\n\r\n        //Now when all this has been done...\r\n        this.totalsMap.add(wTotals);\r\n\r\n        //contributions\r\n\r\n    }\r\n\r\n\r\n\r\n\r\n    private List<WageSummaryBean> getSimulationMiniBeanFromMap(\r\n            HashMap<Long,HashMap<Integer,WageSummaryBean>> pObjectMap, List<WageSummaryBean> pRetList,boolean pSetDisplay) {\r\n\r\n\r\n        Set<Long> wSet = pObjectMap.keySet();\r\n\r\n        for(Long wInt : wSet){\r\n\r\n            HashMap<Integer,WageSummaryBean> wInnerMap = pObjectMap.get(wInt);\r\n            pRetList = getDetailsFromMap(wInnerMap,pRetList,pSetDisplay);\r\n        }\r\n\r\n\r\n\r\n        return pRetList;\r\n    }\r\n    private List<WageSummaryBean> getDetailsFromMap(\r\n            HashMap<Integer, WageSummaryBean> pObjectMap, List<WageSummaryBean> pRetList,boolean pSetDisplay) {\r\n\r\n        Set<Map.Entry<Integer,WageSummaryBean>> set = pObjectMap.entrySet();\r\n        Iterator<Map.Entry<Integer, WageSummaryBean>> i = set.iterator();\r\n\r\n        while(i.hasNext()){\r\n            Map.Entry<Integer,WageSummaryBean> me = i.next();\r\n\r\n            if (pSetDisplay) {\r\n                me.getValue().setDisplayStyle(\"reportOdd\");\r\n            }\r\n\r\n            pRetList.add(me.getValue());\r\n\r\n\r\n\r\n        }\r\n\r\n        return pRetList;\r\n    }\r\n\r\n    @RequestMapping(method={RequestMethod.POST})\r\n    public String processSubmit(@RequestParam(value=\"_updateReport\", required=false) String updRep, @RequestParam(value=\"_cancel\", required=false) String cancel, @ModelAttribute(\"miniBean\") WageBeanContainer pLPB, BindingResult result, SessionStatus status, Model model, HttpServletRequest request) throws Exception {\r\n        SessionManagerService.manageSession(request, model);\r\n\r\n        BusinessCertificate bc = this.getBusinessCertificate(request);\r\n\r\n\r\n        if (isButtonTypeClick(request,REQUEST_PARAM_CANCEL)) {\r\n            return \"redirect:reportsOverview.do\";\r\n        }\r\n\r\n\r\n        if (isButtonTypeClick(request,REQUEST_PARAM_UPDATE_REPORT)) {\r\n\r\n            if (pLPB.getFromDate() == null)\r\n            {\r\n                result.rejectValue(\"\", \"InvalidValue\", \"Please select a Promotion 'From' Date\");\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n            if(pLPB.getToDate() == null)\r\n            {\r\n                result.rejectValue(\"\", \"InvalidValue\", \"Please select a Promotion 'To' Date\");\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n            if((pLPB.getFromDate() == null) && (pLPB.getToDate() == null)){\r\n                result.rejectValue(\"\", \"InvalidValue\", \"Please select Promotion Dates\");\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n            LocalDate date1 = (pLPB.getFromDate());\r\n            LocalDate date2 = (pLPB.getToDate());\r\n\r\n            String fDate = PayrollBeanUtils.getJavaDateAsString(date1);\r\n            String tDate = PayrollBeanUtils.getJavaDateAsString(date2);\r\n\r\n            if (date1.isAfter(date2)) {\r\n                result.rejectValue(\"\", \"InvalidValue\", \"'From' Date can not be greater than 'To' Date \");\r\n\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n            if ((date1.isAfter(LocalDate.now())) || (date1.equals(LocalDate.now()))) {\r\n                result.rejectValue(\"\", \"InvalidValue\", \"'From' Date must be in the Past\");\r\n\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n            if (date1.getYear()!= date2.getYear()) {\r\n                result.rejectValue(\"\", \"InvalidValue\", \"'From' and 'To' Dates must be in the same year.\");\r\n\r\n                addDisplayErrorsToModel(model, request);\r\n                addRoleBeanToModel(model, request);\r\n\r\n                model.addAttribute(\"status\", result);\r\n                model.addAttribute(\"miniBean\", pLPB);\r\n\r\n                return VIEW_NAME;\r\n            }\r\n\r\n            return \"redirect:flaggedPromotions.do?fd=\" +fDate + \"&td=\" + tDate;\r\n        }\r\n\r\n        return \"redirect:flaggedPromotions.do\";\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/osm/gnl/ippms/ogsg/controllers/report/FlaggedPromotionsFormController.java	(revision f8333ce0018b292a1e5ea891935c08e77860a8e7)
++++ src/main/java/com/osm/gnl/ippms/ogsg/controllers/report/FlaggedPromotionsFormController.java	(date 1621848068599)
+@@ -5,6 +5,7 @@
+ import com.osm.gnl.ippms.ogsg.base.services.EmployeeService;
+ import com.osm.gnl.ippms.ogsg.base.services.PromotionService;
+ import com.osm.gnl.ippms.ogsg.controllers.BaseController;
++import com.osm.gnl.ippms.ogsg.domain.promotion.FlaggedPromotions;
+ import com.osm.gnl.ippms.ogsg.domain.report.VariationReportBean;
+ import com.osm.gnl.ippms.ogsg.domain.simulation.SimulationInfoContainer;
+ import com.osm.gnl.ippms.ogsg.domain.simulation.SimulationInfoSummaryBean;
+@@ -12,9 +13,11 @@
+ import com.osm.gnl.ippms.ogsg.generic.domain.BusinessCertificate;
+ import com.osm.gnl.ippms.ogsg.payroll.domain.PayrollFlag;
+ import com.osm.gnl.ippms.ogsg.payroll.domain.PayrollRunMasterBean;
++import com.osm.gnl.ippms.ogsg.payroll.utils.IppmsUtils;
+ import com.osm.gnl.ippms.ogsg.payroll.utils.PayrollBeanUtils;
+ import com.osm.gnl.ippms.ogsg.report.beans.WageBeanContainer;
+ import com.osm.gnl.ippms.ogsg.report.beans.WageSummaryBean;
++import org.apache.tomcat.jni.Local;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
+@@ -101,26 +104,36 @@
+ 
+         BusinessCertificate bc = this.getBusinessCertificate(request);
+ 
+-        List<PayrollFlag> pfList =  this.genericService.loadAllObjectsWithoutRestrictions(PayrollFlag.class, "payPeriodStart");
+-        Comparator<PayrollFlag> comparator = Comparator.comparing(PayrollFlag::getId);
+-
+-        Collections.sort(pfList, comparator.reversed());
+-
+-        PayrollFlag pf = pfList.get(1);
+-
+-        LocalDate endDate = null;
+         LocalDate startDate = null;
++        LocalDate endDate = null;
++
++//        List<PayrollFlag> pfList =  this.genericService.loadAllObjectsWithoutRestrictions(PayrollFlag.class, "payPeriodStart");
++//        Comparator<PayrollFlag> comparator = Comparator.comparing(PayrollFlag::getId);
+ 
+-        if (!pf.isNewEntity()) {
++        List<FlaggedPromotions> lFlagged = this.genericService.loadControlEntity(FlaggedPromotions.class);
+ 
+-            endDate = pf.getPayPeriodEnd();
+-            startDate = pf.getPayPeriodStart();
+-        } else {
+-            ArrayList<LocalDate> list = PayrollBeanUtils.getDefaultCheckRegisterDates();
++        if(IppmsUtils.isNotNullOrEmpty(lFlagged)){
++            FlaggedPromotions thisFlagged = lFlagged.get(0);
++            startDate =  PayrollBeanUtils.getDateFromMonthAndYear(thisFlagged.getRunMonth(), thisFlagged.getRunYear());
++        }
++        else {
+ 
+-            endDate = list.get(1);
+-            startDate = list.get(0);
+         }
++//
++//        Collections.sort(pfList, comparator.reversed());
++
++//        PayrollFlag pf = pfList.get(1);
++
++//        if (!pf.isNewEntity()) {
++//
++//            endDate = pf.getPayPeriodEnd();
++//            startDate = pf.getPayPeriodStart();
++//        } else {
++//            ArrayList<LocalDate> list = PayrollBeanUtils.getDefaultCheckRegisterDates();
++//
++//            endDate = list.get(1);
++//            startDate = list.get(0);
++//        }
+ 
+         ArrayList<String> wGuideInfo = new ArrayList<String>();
+         //First determine from when to when to load.....
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n\t<modelVersion>4.0.0</modelVersion>\r\n\t<parent>\r\n\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\r\n\t\t<version>2.2.7.RELEASE</version>\r\n\t\t<relativePath/> <!-- lookup parent from repository -->\r\n\t</parent>\r\n\t<groupId>ogsg-ippms</groupId>\r\n\t<artifactId>ippms-ogsg</artifactId>\r\n\t<version>1.0</version>\r\n\t<name>ogsg-ippms-service</name>\r\n\t<description>OGSG IPPMS Service</description>\r\n\r\n\t<properties>\r\n\t\t<java.version>1.8</java.version>\r\n\t</properties>\r\n\r\n\t<dependencies>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-mail</artifactId>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-data-jpa</artifactId>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-security</artifactId>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-web</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.hibernate</groupId>\r\n\t\t\t<artifactId>hibernate-core</artifactId>\r\n\t\t\t<version>5.4.2.Final</version>\r\n\t\t</dependency>\r\n        <dependency>\r\n            <groupId>org.springframework</groupId>\r\n            <artifactId>spring-orm</artifactId>\r\n            <version>5.1.6.RELEASE</version>\r\n        </dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>javax.servlet</groupId>\r\n\t\t\t<artifactId>jstl</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<!-- Need this to compile JSP -->\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.apache.tomcat.embed</groupId>\r\n\t\t\t<artifactId>tomcat-embed-jasper</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.apache.poi</groupId>\r\n\t\t\t<artifactId>poi-ooxml</artifactId>\r\n\t\t\t<version>4.1.0</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>com.itextpdf</groupId>\r\n\t\t\t<artifactId>itextpdf</artifactId>\r\n\t\t\t<version>5.0.6</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>com.itextpdf</groupId>\r\n\t\t\t<artifactId>itext7-core</artifactId>\r\n\t\t\t<version>7.0.4</version>\r\n\t\t\t<type>pom</type>\r\n\t\t</dependency>\r\n\t\t<!-- Thanks for using https://jar-download.com -->\r\n\t\t<!-- https://mvnrepository.com/artifact/com.itextpdf/layout -->\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-devtools</artifactId>\r\n\t\t\t<optional>false</optional>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>displaytag</groupId>\r\n\t\t\t<artifactId>displaytag</artifactId>\r\n\t\t\t<version>1.1</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.postgresql</groupId>\r\n\t\t\t<artifactId>postgresql</artifactId>\r\n\t\t\t<version>42.2.14</version>\r\n\t\t\t<scope>runtime</scope>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-test</artifactId>\r\n\t\t\t<scope>test</scope>\r\n\t\t\t<exclusions>\r\n\t\t\t\t<exclusion>\r\n\t\t\t\t\t<groupId>org.junit.vintage</groupId>\r\n\t\t\t\t\t<artifactId>junit-vintage-engine</artifactId>\r\n\t\t\t\t</exclusion>\r\n\t\t\t</exclusions>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.security</groupId>\r\n\t\t\t<artifactId>spring-security-test</artifactId>\r\n\t\t\t<scope>test</scope>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.projectlombok</groupId>\r\n\t\t\t<artifactId>lombok</artifactId>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework</groupId>\r\n\t\t\t<artifactId>spring-web</artifactId>\r\n\t\t\t<version>5.2.8.RELEASE</version>\r\n\t\t</dependency>\r\n        <dependency>\r\n            <groupId>joda-time</groupId>\r\n            <artifactId>joda-time</artifactId>\r\n            <version>2.10.6</version>\r\n        </dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>commons-fileupload</groupId>\r\n\t\t\t<artifactId>commons-fileupload</artifactId>\r\n\t\t\t<version>1.4</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>commons-io</groupId>\r\n\t\t\t<artifactId>commons-io</artifactId>\r\n\t\t\t<version>2.6</version>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>javax.servlet.jsp</groupId>\r\n\t\t\t<artifactId>jsp-api</artifactId>\r\n\t\t\t<version>2.0</version>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>com.googlecode.json-simple</groupId>\r\n\t\t\t<artifactId>json-simple</artifactId>\r\n\t\t\t<version>1.1</version>\r\n\t\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.json</groupId>\r\n\t\t\t<artifactId>json</artifactId>\r\n\t\t\t<version>20201115</version>\r\n\t\t</dependency>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\t\t<!--\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.hibernate</groupId>\r\n\t\t\t<artifactId>hibernate-jpamodelgen</artifactId>\r\n\t\t\t<version>5.2.4.Final</version>\r\n\t\t\t<scope>provided</scope>\r\n\t\t</dependency>\r\n\t\t-->\r\n\t</dependencies>\r\n\r\n\t<build>\r\n\t\t<plugins>\r\n\t\t\t<plugin>\r\n\t\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t\t<artifactId>spring-boot-maven-plugin</artifactId>\r\n\t\t\t</plugin>\r\n\t\t</plugins>\r\n\t</build>\r\n\r\n</project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision f8333ce0018b292a1e5ea891935c08e77860a8e7)
++++ pom.xml	(date 1621503854098)
+@@ -13,6 +13,7 @@
+ 	<version>1.0</version>
+ 	<name>ogsg-ippms-service</name>
+ 	<description>OGSG IPPMS Service</description>
++	<packaging>war</packaging>
+ 
+ 	<properties>
+ 		<java.version>1.8</java.version>
+@@ -151,19 +152,6 @@
+ 			<version>20201115</version>
+ 		</dependency>
+ 
+-
+-
+-
+-
+-
+-		<!--
+-		<dependency>
+-			<groupId>org.hibernate</groupId>
+-			<artifactId>hibernate-jpamodelgen</artifactId>
+-			<version>5.2.4.Final</version>
+-			<scope>provided</scope>
+-		</dependency>
+-		-->
+ 	</dependencies>
+ 
+ 	<build>
+@@ -173,6 +161,7 @@
+ 				<artifactId>spring-boot-maven-plugin</artifactId>
+ 			</plugin>
+ 		</plugins>
++
+ 	</build>
+ 
+ </project>
